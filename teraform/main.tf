@@ -17,12 +17,10 @@ module "nginx" {
 module "sonarqube" {
   source = "./modules/sonarqube"
 
-  # PostgreSQL credentials
-  postgres_user     = "sonar"
-  postgres_password = "sonar_password"  # In production, use secrets/vault
-
-  # Port configuration
-  sonarqube_port = 9000
+  sonarqube_port   = 9000
+  postgres_user    = "sonar"
+  postgres_password = "your_secure_password_here" # Change this!
+  sonarqube_host   = "sonarqube"  # Must match what Nginx expects
 }
 
 # Call Jenkins Module

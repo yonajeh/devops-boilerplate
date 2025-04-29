@@ -9,15 +9,22 @@ output "nginx_access_urls" {
   }
 }
 
-output "sonarqube_access" {
-  description = "SonarQube connection details"
+output "sonarqube_url" {
+  value = "http://${var.domain_name}/sonarqube"
+}
+
+output "sonarqube_direct_url" {
+  value = "http://${var.domain_name}:${module.sonarqube.sonarqube_port}"
+  description = "Direct access URL (bypassing proxy)"
+}
+
+output "sonarqube_credentials" {
   value = {
-    url       = "http://${var.domain_name}:${module.sonarqube.sonarqube_port}"
-    admin_pwd = "admin" # Default credentials (change after first login)
+    username = "admin"
+    password = "admin" # Default, change after first login
   }
   sensitive = true
 }
-
 output "jenkins_access" {
   description = "Jenkins connection details"
   value = {
