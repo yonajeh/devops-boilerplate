@@ -17,10 +17,16 @@ resource "docker_image" "jenkins" {
 resource "docker_container" "jenkins" {
   name  = "jenkins"
   image = docker_image.jenkins.image_id
+
+  networks_advanced {
+    name = var.docker_network_name
+  }
+
   ports {
     internal = 8080
     external = var.jenkins_port  # Use variable
   }
+
   ports {
     internal = 50000
     external = var.agent_port    # Use variable

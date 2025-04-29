@@ -6,7 +6,7 @@ terraform {
   }
 }
 resource "docker_network" "sonarnet" {
-  name = "sonarnet"
+  name = "n22"
 }
 
 resource "docker_volume" "sonarqube_data" {

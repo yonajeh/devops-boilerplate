@@ -3,6 +3,11 @@ terraform {
   required_version = ">= 1.0.0"
 }
 
+resource "docker_network" "app_network" {
+  name   = "n22"
+  driver = "bridge"
+}
+
 # Call Nginx Module
 module "nginx" {
   source = "./modules/nginx"

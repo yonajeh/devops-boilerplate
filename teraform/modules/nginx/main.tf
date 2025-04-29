@@ -57,6 +57,10 @@ resource "docker_container" "nginx" {
   name  = "nginx"
   image = docker_image.nginx.image_id
 
+  networks_advanced {
+    name = var.docker_network_name
+  }
+
   ports {
     internal = 80
     external = var.http_port

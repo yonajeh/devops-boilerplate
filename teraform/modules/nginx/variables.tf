@@ -27,6 +27,11 @@ variable "domain_name" {
   default = "localhost"
 }
 
+variable "docker_network_name" {
+  type    = string
+  default = "n22"
+}
+
 variable "jenkins_port" {
   type    = number
   default = 8080

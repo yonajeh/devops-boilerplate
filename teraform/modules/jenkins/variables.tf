@@ -17,6 +17,12 @@ variable "jenkins_port" {
   default     = 8080
 }
 
+variable "docker_network_name" {
+  description = "the N22"
+  type        = string
+  default     = "n22"
+}
+
 variable "agent_port" {
   description = "Jenkins agent communication port"
   type        = number
