@@ -10,21 +10,6 @@ resource "docker_image" "nginx" {
   name = "nginx:latest"
 }
 
-# Create the nginx.conf template file
-resource "local_file" "nginx_template" {
-  filename = "${path.module}/templates/nginx.conf.tftpl"
-  content = templatefile("${path.module}/templates/nginx.conf.tftpl", {
-    # ... your template variables ...
-  })
-
-  # Create directory if doesn't exist
-  provisioner "local-exec" {
-    command = "mkdir -p ${path.module}/templates"
-    when    = create
-  }
-}
-
-
 # Render the final nginx configuration
 resource "local_file" "nginx_config" {
   filename = "${path.module}/rendered.conf"
@@ -35,12 +20,16 @@ resource "local_file" "nginx_config" {
     jenkins_port   = var.jenkins_port
     sonarqube_host = var.sonarqube_host
     sonarqube_port = var.sonarqube_port
-    keycloak_host = var.sonarqube_host
-    keycloak_port = var.sonarqube_port
+    keycloak_host  = var.keycloak_host   # Fix: Use var.keycloak_host (not sonarqube_host)
+    keycloak_port  = var.keycloak_port   # Fix: Use var.keycloak_port
     domain_name    = var.domain_name
   })
 
-  depends_on = [local_file.nginx_template]
+  # Ensure template directory exists
+  provisioner "local-exec" {
+    command = "mkdir -p ${path.module}/templates"
+    when    = create
+  }
 }
 
 # Create and run the nginx container
