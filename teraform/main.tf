@@ -3,14 +3,39 @@ terraform {
   required_version = ">= 1.0.0"
 }
 
+# main.tf (root)
+data "docker_network" "existing" {
+  name = "n22"
+
+  # Silently continue if network doesn't exist
+  lifecycle {
+    postcondition {
+      condition     = self.name == "n22" || self.name == ""
+      error_message = "Network already exists with different configuration"
+    }
+  }
+}
+
+resource "docker_network" "app_network" {
+  count = data.docker_network.existing.name == "" ? 1 : 0
+  name   = "n22"
+  driver = "bridge"
+}
+
 resource "docker_network" "app_network" {
   name   = "n22"
   driver = "bridge"
+
+  # Prevent network recreation on every apply
+  lifecycle {
+    ignore_changes = [name]
+  }
 }
 
 # Call Nginx Module
 module "nginx" {
   source = "./modules/nginx"
+  docker_network_name = docker_network.app_network.name
 
   domain_name    = var.domain_name
   http_port      = 80

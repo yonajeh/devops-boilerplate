@@ -11,6 +11,12 @@ variable "postgres_user" {
   default     = "sonar"
 }
 
+variable "docker_network_name" {
+  description = "Ntwork"
+  type        = string
+  default     = "n22"
+}
+
 variable "postgres_password" {
   description = "PostgreSQL password"
   type        = string

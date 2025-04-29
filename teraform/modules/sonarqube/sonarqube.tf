@@ -5,9 +5,7 @@ terraform {
     }
   }
 }
-resource "docker_network" "sonarnet" {
-  name = "n22"
-}
+
 
 resource "docker_volume" "sonarqube_data" {
   name = "sonarqube_data"
@@ -32,8 +30,9 @@ resource "docker_container" "postgres" {
     volume_name    = docker_volume.postgres_data.name
     container_path = "/var/lib/postgresql/data"
   }
+
   networks_advanced {
-    name = docker_network.sonarnet.name
+    name = var.docker_network_name
   }
 }
 
