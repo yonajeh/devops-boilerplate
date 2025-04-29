@@ -16,13 +16,10 @@ data "docker_network" "existing" {
   }
 }
 
-resource "docker_network" "app_network" {
-  count = data.docker_network.existing.name == "" ? 1 : 0
-  name   = "n22"
-  driver = "bridge"
-}
 
 resource "docker_network" "app_network" {
+  count = data.docker_network.existing.name == "" ? 1 : 0
+
   name   = "n22"
   driver = "bridge"
 
