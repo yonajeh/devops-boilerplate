@@ -10,31 +10,20 @@ resource "docker_image" "nginx" {
   name = "nginx:latest"
 }
 
-resource "null_resource" "create_templates_dir" {
-  triggers = {
-    always_run = timestamp()
-  }
-
-  provisioner "local-exec" {
-    command = "mkdir -p ${path.module}/templates"
-  }
-}
-
 # Create the nginx.conf template file
 resource "local_file" "nginx_template" {
   filename = "${path.module}/templates/nginx.conf.tftpl"
   content = templatefile("${path.module}/templates/nginx.conf.tftpl", {
-    http_port      = var.http_port
-    https_port     = var.https_port
-    jenkins_host   = var.jenkins_host
-    jenkins_port   = var.jenkins_port
-    sonarqube_host = var.sonarqube_host
-    sonarqube_port = var.sonarqube_port
-    domain_name    = var.domain_name
+    # ... your template variables ...
   })
 
-  depends_on = [null_resource.create_templates_dir]
+  # Create directory if doesn't exist
+  provisioner "local-exec" {
+    command = "mkdir -p ${path.module}/templates"
+    when    = create
+  }
 }
+
 
 # Render the final nginx configuration
 resource "local_file" "nginx_config" {

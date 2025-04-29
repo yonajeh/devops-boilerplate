@@ -9,8 +9,4 @@ terraform {
 
 provider "docker" {
   host = "unix:///var/run/docker.sock"
-  # Allow Terraform to use existing networks
-  registry_auth {
-    address = "*"
-  }
 }
