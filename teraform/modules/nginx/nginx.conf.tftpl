@@ -1,0 +1,22 @@
+# modules/nginx/nginx.conf.tftpl
+events {}
+http {
+  server {
+    listen      80;
+    server_name _;
+
+    location / {
+      root /usr/share/nginx/html;
+    }
+
+    location /jenkins {
+      proxy_pass http://${jenkins_host}:8080;
+      proxy_set_header Host $host;
+    }
+
+    location /sonarqube {
+      proxy_pass http://${sonarqube_host}:9000;
+      proxy_set_header Host $host;
+    }
+  }
+}

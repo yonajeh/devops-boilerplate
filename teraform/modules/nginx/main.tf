@@ -5,7 +5,7 @@ terraform {
     }
   }
 }
-
+# modules/nginx/main.tf
 resource "docker_image" "nginx" {
   name = "nginx:latest"
 }
@@ -15,12 +15,21 @@ resource "docker_container" "nginx" {
   image = docker_image.nginx.image_id
   ports {
     internal = 80
-    external = var.http_port
+    external = var.http_port  # ← Uses the variable
   }
+
+  # Dynamic configuration for proxy rules
   volumes {
-    host_path      = abspath("${path.module}/../../scripts/nginx.conf")
+    host_path      = "${path.module}/nginx.conf"
     container_path = "/etc/nginx/nginx.conf"
-    read_only      = true
+  }
+
+  # Only map HTTPS port if enabled
+  dynamic "ports" {
+    for_each = var.https_port != null ? [1] : []
+    content {
+      internal = 443
+      external = var.https_port
+    }
   }
 }
-

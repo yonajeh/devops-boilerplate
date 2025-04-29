@@ -7,12 +7,9 @@ terraform {
 module "nginx" {
   source = "./modules/nginx"
 
-  # Customize Nginx ports if needed
-  http_port  = 80
-  https_port = 443  # For future SSL implementation
-
-  # Link to other services
-  jenkins_host = "jenkins"  # Docker internal DNS
+  http_port     = 80
+  https_port    = 443
+  jenkins_host  = "jenkins"  # Must match Jenkins service name
   sonarqube_host = "sonarqube"
 }
 
