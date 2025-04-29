@@ -25,7 +25,7 @@ module "nginx" {
   jenkins_host   = "jenkins"
   keycloak_host   = "keycloak"
   keycloak_port   = 8082
-  jenkins_port   = 8080
+  jenkins_port   = 8083
   sonarqube_host = "sonarqube"
   sonarqube_port = 9001
   sonarqube_ready_check = module.sonarqube.is_ready
@@ -55,7 +55,7 @@ module "jenkins" {
   admin_password = var.jenkins_password  # Defined in variables.tf
 
   # Network
-  jenkins_port     = 8080
+  jenkins_port     = 8083
   agent_port       = 50000
   docker_sock_path = "/var/run/docker.sock"  # For Docker-based builds
 }

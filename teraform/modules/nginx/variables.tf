@@ -34,7 +34,7 @@ variable "docker_network_name" {
 
 variable "jenkins_port" {
   type    = number
-  default = 8080
+  default = 8083
 }
 
 variable "sonarqube_host" {
