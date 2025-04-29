@@ -1,4 +1,3 @@
-# Disable setup wizard and set admin password
 import jenkins.model.*
 import hudson.security.*
 
