@@ -60,7 +60,16 @@ module "jenkins" {
   docker_sock_path = "/var/run/docker.sock"  # For Docker-based builds
 }
 
+module "keycloak" {
+  source = "./modules/keycloak"
 
+  # Required variables
+  admin_password = var.keycloak_admin_password
+
+  # Optional variables (using defaults)
+  # admin_user = "admin"
+  hostname   = "auth.craftmanpro.online"
+}
 
 
 # Define dependencies between services
