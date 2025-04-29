@@ -3,23 +3,8 @@ terraform {
   required_version = ">= 1.0.0"
 }
 
-# main.tf (root)
-data "docker_network" "existing" {
-  name = "n22"
-
-  # Silently continue if network doesn't exist
-  lifecycle {
-    postcondition {
-      condition     = self.name == "n22" || self.name == ""
-      error_message = "Network already exists with different configuration"
-    }
-  }
-}
-
 
 resource "docker_network" "app_network" {
-  count = data.docker_network.existing.name == "" ? 1 : 0
-
   name   = "n22"
   driver = "bridge"
 
@@ -46,6 +31,7 @@ module "nginx" {
 # Call SonarQube Module
 module "sonarqube" {
   source = "./modules/sonarqube"
+  docker_network_name = docker_network.app_network.name
 
   sonarqube_port   = 9001
   postgres_user    = "sonar"
@@ -56,6 +42,7 @@ module "sonarqube" {
 # Call Jenkins Module
 module "jenkins" {
   source = "./modules/jenkins"
+  docker_network_name = docker_network.app_network.name
 
   # Authentication
   admin_user     = "admin"
