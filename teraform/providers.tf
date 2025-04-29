@@ -16,14 +16,5 @@ provider "docker" {
 }
 
 
-provider "keycloak" {
-  client_id = "admin-cli"
-  username  = module.keycloak.admin_credentials.username
-  password  = module.keycloak.admin_credentials.password
-  url       = module.keycloak.keycloak_url
-}
 
-resource "keycloak_realm" "my_realm" {
-  realm   = "appliiica"
-  enabled = true
-}
+
