@@ -17,7 +17,7 @@ resource "docker_container" "keycloak" {
     "KEYCLOAK_ADMIN=yonajeh",
     "KEYCLOAK_ADMIN_PASSWORD=yonaj@eh",
     "KC_PROXY=edge",
-    "KC_HOSTNAME=keycloak.craftmanpro.online"
+    "KC_HOSTNAME=auth.craftmanpro.online"
   ]
   command = ["start-dev"]
 }

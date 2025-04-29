@@ -66,7 +66,7 @@ module "keycloak" {
 
   # Optional variables (using defaults)
   # admin_user = "admin"
-  # hostname   = "keycloak.localhost"
+  hostname   = "auth.craftmanpro.online"
 }
 
 

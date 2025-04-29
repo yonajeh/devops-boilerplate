@@ -1,23 +1,41 @@
-events {}
+server {
+    listen 80;
+    server_name craftmanpro.online www.craftmanpro.online;
+    return 301 https://craftmanpro.online$request_uri;
+}
 
-http {
-    server {
-        listen      ${http_port};
-        server_name ${domain_name};
+server {
+    listen 80;
+    server_name jenkins.craftmanpro.online;
 
-        location / {
-            root /usr/share/nginx/html;
-            index index.html;
-        }
+    location / {
+        proxy_pass http://${jenkins_host}:${jenkins_port};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}
 
-        location /jenkins {
-            proxy_pass http://${jenkins_host}:${jenkins_port};
-            proxy_set_header Host $host;
-        }
+server {
+    listen 80;
+    server_name sonar.craftmanpro.online;
 
-        location /sonarqube {
-            proxy_pass http://${sonarqube_host}:${sonarqube_port};
-            proxy_set_header Host $host;
-        }
+    location / {
+        proxy_pass http://${sonarqube_host}:${sonarqube_port};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+
+server {
+    listen 80;
+    server_name auth.craftmanpro.online;
+
+    location / {
+        proxy_pass http://${keycloak_host}:${keycloak_port};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
     }
 }

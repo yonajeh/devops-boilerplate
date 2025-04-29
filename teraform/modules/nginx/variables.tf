@@ -24,7 +24,7 @@ variable "sonarqube_port" {
 
 variable "domain_name" {
   type    = string
-  default = "localhost"
+  default = "craftmanpro.online"
 }
 
 variable "docker_network_name" {

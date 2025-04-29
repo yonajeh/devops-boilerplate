@@ -8,7 +8,7 @@ variable "jenkins_password" {
 variable "domain_name" {
   description = "Base domain or IP for accessing services"
   type        = string
-  default     = "localhost"  # Default fallback value
+  default     = "craftmanpro.online"  # Default fallback value
 }
 
 
