@@ -63,3 +63,14 @@ variable "jenkins_dependency" {
   description = "Jenkins container reference"
   type        = any
 }
+
+variable "keycloak_port" {
+  type    = number
+  default = 8082
+}
+
+variable "keycloak_host" {
+  description = "Docker service name for keycloak"
+  type        = string
+  default     = "keycloak"
+}

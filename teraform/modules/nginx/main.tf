@@ -35,6 +35,8 @@ resource "local_file" "nginx_config" {
     jenkins_port   = var.jenkins_port
     sonarqube_host = var.sonarqube_host
     sonarqube_port = var.sonarqube_port
+    keycloak_host = var.sonarqube_host
+    keycloak_port = var.sonarqube_port
     domain_name    = var.domain_name
   })
 
