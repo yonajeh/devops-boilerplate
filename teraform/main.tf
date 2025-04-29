@@ -13,14 +13,14 @@ module "nginx" {
   jenkins_host   = "jenkins"
   jenkins_port   = 8080
   sonarqube_host = "sonarqube"
-  sonarqube_port = 9000
+  sonarqube_port = 9001
 }
 
 # Call SonarQube Module
 module "sonarqube" {
   source = "./modules/sonarqube"
 
-  sonarqube_port   = 9000
+  sonarqube_port   = 9001
   postgres_user    = "sonar"
   postgres_password = "your_secure_password_here" # Change this!
   sonarqube_host   = "sonarqube"  # Must match what Nginx expects

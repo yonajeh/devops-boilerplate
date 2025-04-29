@@ -19,7 +19,7 @@ variable "jenkins_host" {
 
 variable "sonarqube_port" {
   type    = number
-  default = 9000
+  default = 9001
 }
 
 variable "domain_name" {

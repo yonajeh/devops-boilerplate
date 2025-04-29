@@ -2,7 +2,7 @@
 variable "sonarqube_port" {
   description = "Port for SonarQube web interface"
   type        = number
-  default     = 9000
+  default     = 9001
 }
 
 variable "postgres_user" {
