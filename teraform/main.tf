@@ -26,6 +26,10 @@ module "nginx" {
   jenkins_port   = 8080
   sonarqube_host = "sonarqube"
   sonarqube_port = 9001
+  sonarqube_ready_check = module.sonarqube.is_ready
+  jenkins_ready_check   = module.jenkins.is_ready
+  sonarqube_dependency  = module.sonarqube.container_id
+  jenkins_dependency    = module.jenkins.container_id
 }
 
 # Call SonarQube Module

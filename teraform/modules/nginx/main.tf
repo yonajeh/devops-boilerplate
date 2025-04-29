@@ -24,6 +24,19 @@ resource "local_file" "nginx_template" {
   }
 }
 
+resource "null_resource" "wait_for_services" {
+  triggers = {
+    always_run = timestamp()
+  }
+
+  provisioner "local-exec" {
+    command = <<EOT
+      until ${var.sonarqube_ready_check}; do sleep 5; done
+      until ${var.jenkins_ready_check}; do sleep 5; done
+    EOT
+  }
+}
+
 
 # Render the final nginx configuration
 resource "local_file" "nginx_config" {
@@ -68,6 +81,9 @@ resource "docker_container" "nginx" {
 
   depends_on = [
     local_file.nginx_config,
-    docker_image.nginx
+    docker_image.nginx,
+    null_resource.wait_for_services,
+    var.sonarqube_dependency,
+    var.jenkins_dependency
   ]
 }

@@ -42,3 +42,24 @@ variable "sonarqube_host" {
   type        = string
   default     = "sonarqube"
 }
+
+
+variable "sonarqube_ready_check" {
+  description = "Command to check SonarQube readiness"
+  type        = string
+}
+
+variable "jenkins_ready_check" {
+  description = "Command to check Jenkins readiness"
+  type        = string
+}
+
+variable "sonarqube_dependency" {
+  description = "SonarQube container reference"
+  type        = any
+}
+
+variable "jenkins_dependency" {
+  description = "Jenkins container reference"
+  type        = any
+}

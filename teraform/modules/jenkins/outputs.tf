@@ -19,3 +19,14 @@ output "admin_password" {
   value       = var.admin_password
   sensitive   = true
 }
+
+# modules/jenkins/outputs.tf
+output "is_ready" {
+  description = "Jenkins readiness check"
+  value       = "curl -s http://localhost:${var.jenkins_port}/api/json | grep -q 'mode'"
+}
+
+output "container_id" {
+  description = "Jenkins container ID"
+  value       = docker_container.jenkins.id
+}
