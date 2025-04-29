@@ -3,3 +3,10 @@ variable "jenkins_password" {
   type        = string
   sensitive   = true
 }
+
+# variables.tf
+variable "domain_name" {
+  description = "Base domain or IP for accessing services"
+  type        = string
+  default     = "localhost"  # Default fallback value
+}

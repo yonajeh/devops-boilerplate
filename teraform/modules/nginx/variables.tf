@@ -17,6 +17,21 @@ variable "jenkins_host" {
   default     = "jenkins"
 }
 
+variable "sonarqube_port" {
+  type    = number
+  default = 9000
+}
+
+variable "domain_name" {
+  type    = string
+  default = "localhost"
+}
+
+variable "jenkins_port" {
+  type    = number
+  default = 8080
+}
+
 variable "sonarqube_host" {
   description = "Docker service name for SonarQube"
   type        = string
