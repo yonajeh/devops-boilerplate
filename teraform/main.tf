@@ -7,10 +7,13 @@ terraform {
 module "nginx" {
   source = "./modules/nginx"
 
-  http_port     = 80
-  https_port    = 443
-  jenkins_host  = "jenkins"  # Must match Jenkins service name
+  domain_name    = var.domain_name
+  http_port      = 80
+  https_port     = 443
+  jenkins_host   = "jenkins"
+  jenkins_port   = 8080
   sonarqube_host = "sonarqube"
+  sonarqube_port = 9000
 }
 
 # Call SonarQube Module

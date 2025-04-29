@@ -1,64 +1,72 @@
-# outputs.tf - Display critical information after deployment
+# outputs.tf - Complete Service Outputs
 
-output "nginx_access_urls" {
-  description = "Nginx access endpoints"
+# Nginx Access Points
+output "nginx_endpoints" {
+  description = "Nginx access URLs"
   value = {
-    http_url          = "http://${var.domain_name}:${module.nginx.http_port}"
+    http_entrypoint    = "http://${var.domain_name}:${module.nginx.http_port}"
     jenkins_proxy_url = "http://${var.domain_name}:${module.nginx.http_port}/jenkins"
-    # https_url will be available after SSL configuration
+    sonarqube_proxy_url = "http://${var.domain_name}:${module.nginx.http_port}/sonarqube"
+    config_file_path  = abspath(local_file.nginx_config.filename)
   }
 }
 
-output "sonarqube_url" {
-  value = "http://${var.domain_name}/sonarqube"
-}
-
-output "sonarqube_direct_url" {
-  value = "http://${var.domain_name}:${module.sonarqube.sonarqube_port}"
-  description = "Direct access URL (bypassing proxy)"
-}
-
-output "sonarqube_credentials" {
-  value = {
-    username = "admin"
-    password = "admin" # Default, change after first login
-  }
-  sensitive = true
-}
+# Jenkins Access Information
 output "jenkins_access" {
   description = "Jenkins connection details"
   value = {
-    url         = "http://${var.domain_name}:${module.jenkins.jenkins_port}"
-    admin_user  = module.jenkins.admin_user
-    initial_pwd = module.jenkins.admin_password
+    direct_url       = "http://${var.domain_name}:${module.jenkins.jenkins_port}"
+    proxied_url      = "http://${var.domain_name}/jenkins"
+    admin_user      = module.jenkins.admin_user
+    initial_password = module.jenkins.admin_password
+    agent_port      = module.jenkins.jenkins_port
   }
   sensitive = true
 }
 
-output "docker_services_summary" {
-  description = "List of all running Docker services"
-  value = [
-    "nginx:${module.nginx.http_port}",
-    "sonarqube:${module.sonarqube.sonarqube_port}",
-    "jenkins:${module.jenkins.jenkins_port}"
-  ]
+# SonarQube Access Information
+output "sonarqube_access" {
+  description = "SonarQube connection details"
+  value = {
+    direct_url       = "http://${var.domain_name}:${module.sonarqube.sonarqube_port}"
+    proxied_url      = "http://${var.domain_name}/sonarqube"
+    admin_username   = "admin"
+    admin_password   = "admin" # Default, change after first login
+    postgres_user    = module.sonarqube.postgres_user
+  }
+  sensitive = true
 }
 
-output "important_notes" {
-  description = "Post-deployment instructions"
+# Docker Services Summary
+output "service_ports" {
+  description = "All exposed service ports"
+  value = {
+    nginx      = module.nginx.http_port
+    jenkins    = module.jenkins.jenkins_port
+    sonarqube  = module.sonarqube.sonarqube_port
+    jenkins_agent = module.jenkins.agent_port
+  }
+}
+
+# Post-Deployment Notes
+output "access_instructions" {
+  description = "Important access information"
   value = <<EOT
 
-  IMPORTANT NEXT STEPS:
-  1. Jenkins setup:
-     - Access: ${module.jenkins.admin_user} / ${module.jenkins.admin_password}
-     - Install suggested plugins on first run
-  2. SonarQube:
-     - Change default admin password immediately
-  3. Nginx:
-     - Configure SSL certificates for production use
+  === SERVICE ACCESS POINTS ===
+  Jenkins:
+  - Direct: http://${var.domain_name}:${module.jenkins.jenkins_port}
+  - Proxied: http://${var.domain_name}/jenkins
+  - Initial admin: ${module.jenkins.admin_user} / ${module.jenkins.admin_password}
 
-  Access services:
-  - Jenkins:    http://${var.domain_name}:${module.jenkins.jenkins_port}
-  - SonarQube:  http://${var.domain_name}:${module.sonarqube.sonarqube_port}
+  SonarQube:
+  - Direct: http://${var.domain_name}:${module.sonarqube.sonarqube_port}
+  - Proxied: http://${var.domain_name}/sonarqube
+  - Default admin: admin / admin
+
+  === NEXT STEPS ===
+  1. Change default SonarQube credentials
+  2. Configure Jenkins plugins
+  3. Check Nginx config at: ${abspath(local_file.nginx_config.filename)}
   EOT
 }
