@@ -57,7 +57,7 @@ resource "docker_container" "sonarqube" {
     container_path = "/opt/sonarqube/data"
   }
   networks_advanced {
-    name = docker_network.sonarnet.name
+    name = var.docker_network_name
   }
   depends_on = [docker_container.postgres]
 }
