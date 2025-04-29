@@ -23,6 +23,8 @@ module "nginx" {
   http_port      = 80
   https_port     = 443
   jenkins_host   = "jenkins"
+  keycloak_host   = "keycloak"
+  keycloak_port   = 8082
   jenkins_port   = 8080
   sonarqube_host = "sonarqube"
   sonarqube_port = 9001
