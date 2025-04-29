@@ -10,3 +10,11 @@ variable "domain_name" {
   type        = string
   default     = "localhost"  # Default fallback value
 }
+
+
+# variables.tf
+variable "keycloak_admin_password" {
+  description = "Initial admin password for Keykloak"
+  type        = string
+  sensitive = true
+}
