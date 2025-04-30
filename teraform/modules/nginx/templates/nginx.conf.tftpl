@@ -3,51 +3,66 @@ events {
 }
 
 http {
+    # Default HTTP→HTTPS redirect for main domain
     server {
         listen 80;
-        server_name ${domain_name};
-
-        location / {
-            return 301 https://$host$request_uri;
-        }
+        server_name ${domain_name} www.${domain_name};
+        return 301 https://${domain_name}$request_uri;
     }
 
+    # Jenkins Configuration
     server {
         listen 80;
         server_name jenkins.${domain_name};
 
         location / {
             proxy_pass http://${jenkins_host}:${jenkins_port};
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Host               $host;
+            proxy_set_header X-Real-IP          $remote_addr;
+            proxy_set_header X-Forwarded-For    $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto  $scheme;
+
             proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
+            proxy_set_header Upgrade           $http_upgrade;
+            proxy_set_header Connection        "upgrade";
+            proxy_read_timeout                 86400;
+
+            proxy_redirect http://${jenkins_host}:${jenkins_port} http://jenkins.${domain_name};
         }
     }
 
+    # SonarQube Configuration
     server {
         listen 80;
         server_name sonar.${domain_name};
 
         location / {
             proxy_pass http://${sonarqube_host}:${sonarqube_port};
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Host               $host;
+            proxy_set_header X-Real-IP          $remote_addr;
+            proxy_set_header X-Forwarded-For    $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto  $scheme;
+
+            proxy_redirect http://${sonarqube_host}:${sonarqube_port} http://sonar.${domain_name};
         }
     }
 
+    # Keycloak Configuration
     server {
         listen 80;
         server_name auth.${domain_name};
 
         location / {
             proxy_pass http://${keycloak_host}:${keycloak_port};
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Host               $host;
+            proxy_set_header X-Real-IP          $remote_addr;
+            proxy_set_header X-Forwarded-For    $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto  $scheme;
+
+            # Required for Keycloak admin console
+            proxy_buffer_size                   128k;
+            proxy_buffers                       4 256k;
+            proxy_busy_buffers_size             256k;
         }
     }
 }
