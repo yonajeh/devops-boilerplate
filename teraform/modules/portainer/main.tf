@@ -36,10 +36,4 @@ resource "docker_container" "portainer" {
     host_path      = "/opt/portainer_data"
     container_path = "/data"
   }
-
-  command = [
-    "--admin-password='${var.docker_network_name}'",
-    "--admin-email='${var.admin_user}'",
-    "--admin-name='${var.admin_user_email}'"
-  ]
 }
