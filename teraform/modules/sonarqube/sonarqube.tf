@@ -49,7 +49,7 @@ resource "docker_container" "sonarqube" {
     "SONAR_JDBC_PASSWORD=${var.postgres_password}"
   ]
   ports {
-    internal = 9000
+    internal = 80
     external = var.sonarqube_port
   }
   volumes {
