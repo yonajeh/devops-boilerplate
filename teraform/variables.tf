@@ -18,3 +18,11 @@ variable "keycloak_admin_password" {
   type        = string
   sensitive = true
 }
+
+
+# variables.tf
+variable "portainer_admin_password" {
+  description = "Initial admin password for Portainer"
+  type        = string
+  sensitive = true
+}

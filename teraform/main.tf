@@ -115,3 +115,18 @@ module "keycloak" {
 
 }
 
+module "portainer" {
+  source = "./modules/portainer"
+
+  # Required variables
+  admin_password = var.portainer_admin_password
+
+  # Optional variables (using defaults)
+  admin_user = "admin"
+  hostname   = "portainer.craftmanpro.online"
+  docker_network_name = docker_network.app_network.name
+
+  depends_on = [null_resource.docker_ready]
+
+}
+
