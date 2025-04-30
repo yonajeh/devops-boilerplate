@@ -5,14 +5,11 @@ terraform {
     }
   }
 }
-resource "docker_image" "portainer" {
-  name         = "portainer/portainer-ce:lts"
-  keep_locally = false
-}
+
 
 resource "docker_container" "portainer" {
   name  = "portainer"
-  image = docker_image.portainer
+  image    = "portainer/portainer-ce:lts"  # Direct image string
   restart = "unless-stopped"
 
 
