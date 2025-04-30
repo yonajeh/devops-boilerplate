@@ -2,11 +2,17 @@
 terraform {
   required_version = ">= 1.0.0"
 }
+resource "null_resource" "docker_ready" {
+  depends_on = [null_resource.install_docker]
 
+  provisioner "local-exec" {
+    command = "echo 'Docker is now ready for Terraform operations'"
+  }
+}
 # docker_install.tf
 resource "null_resource" "install_docker" {
   triggers = {
-    always_run = timestamp() # Ensures this runs every time
+    always_run = timestamp()
   }
 
   provisioner "local-exec" {
@@ -16,12 +22,14 @@ resource "null_resource" "install_docker" {
         echo "Installing Docker..."
         curl -fsSL https://get.docker.com | sh
         sudo usermod -aG docker $USER
-      else
-        echo "Docker already installed"
+        sudo systemctl enable --now docker
       fi
 
-      # Start Docker service
-      sudo systemctl enable --now docker
+      # Verify Docker is running
+      while ! docker info >/dev/null 2>&1; do
+        echo "Waiting for Docker to start..."
+        sleep 3
+      done
     EOT
   }
 }
@@ -58,7 +66,7 @@ module "nginx" {
   sonarqube_dependency  = module.sonarqube.container_id
   jenkins_dependency    = module.jenkins.container_id
 
-  depends_on = [null_resource.install_docker]
+  depends_on = [null_resource.docker_ready]
 
 }
 
@@ -72,7 +80,7 @@ module "sonarqube" {
   postgres_password = "your_secure_password_here" # Change this!
   sonarqube_host   = "sonarqube"  # Must match what Nginx expects
 
-  depends_on = [null_resource.install_docker]
+  depends_on = [null_resource.docker_ready]
 
 }
 
@@ -89,7 +97,7 @@ module "jenkins" {
   jenkins_port     = 8083
   agent_port       = 50000
   docker_sock_path = "/var/run/docker.sock"  # For Docker-based builds
-  depends_on = [null_resource.install_docker]
+  depends_on = [null_resource.docker_ready]
 
 }
 
@@ -103,8 +111,7 @@ module "keycloak" {
   # admin_user = "admin"
   hostname   = "auth.craftmanpro.online"
 
-  depends_on = [null_resource.install_docker]
+  depends_on = [null_resource.docker_ready]
 
 }
-
 
