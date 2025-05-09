@@ -4,16 +4,11 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx
-    volumes:
-      - /root/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - /root/nginx/certs:/etc/letsencrypt
-      - /root/nginx/certs/www:/var/www/certbot
     ports:
       - "80:80"
       - "443:443"
-    depends_on:
-      - certbot
     restart: always
+
 
   certbot:
     image: certbot/certbot
